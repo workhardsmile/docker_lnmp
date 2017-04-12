@@ -1,0 +1,38 @@
+FROM hub.c.163.com/library/php:7.1-fpm-alpine
+
+MAINTAINER  Frank Wu "gang.wu@istuary.com"
+
+RUN echo -e "https://mirror.tuna.tsinghua.edu.cn/alpine/v3.4/main\n\
+https://mirror.tuna.tsinghua.edu.cn/alpine/v3.4/community\n\
+https://mirror.tuna.tsinghua.edu.cn/alpine/v3.4/testing" > /etc/apk/repositories && \
+    apk add --update --no-cache git openssh-client && \
+    apk add --update nginx
+
+RUN docker-php-source extract && \
+  apk add --update --no-cache autoconf g++ make && \
+  apk add --update libpng libpng-dev libjpeg zlib freetype freetype-dev jpeg jpeg-dev libmcrypt-dev && \
+  #pecl install redis && \
+  #docker-php-ext-enable redis && \
+  docker-php-ext-install mysqli && \
+  docker-php-ext-install pdo && \
+  docker-php-ext-install pdo_mysql && \
+  docker-php-ext-install mbstring && \
+  docker-php-ext-install tokenizer && \
+  docker-php-ext-configure gd \
+        --enable-gd-native-ttf \
+        --with-freetype-dir=/usr/include/freetype2 \
+        --with-png-dir=/usr/include \
+        --with-jpeg-dir=/usr/include  && \
+  docker-php-ext-install gd && \
+  docker-php-source delete
+
+# Install Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');" #&& \ composer global require "hirak/prestissimo:^0.3";
+
+# Clean build
+RUN apk del wget && \
+    rm -rf /var/cache/apk/*
+
+EXPOSE 80 9000

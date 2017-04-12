@@ -1,0 +1,18 @@
+#!/bin/sh
+env=qa
+[ -n "$1" ] && env=$1
+root_dir=/home/iron/covision-container
+registration_name="192.168.29.158:5000/php-nginx-alpine"
+container_id=0
+while [ "$container_id" = "0" ]
+ do
+    container_id=$(docker ps|grep "$registration_name"|awk '{print $1}')
+    [ "$container_id" = "" ] && container_id=0
+    sleep 1s
+ done
+echo $container_id
+#docker commit $container_id $registration_name:$env-latest
+#docker push $registration_name:$env-latest
+docker exec -i --user www-data $container_id php artisan queue:work --queue=test &
+docker exec -i --user www-data $container_id php artisan queue:work --queue=emails
+exit 3

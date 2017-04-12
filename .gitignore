@@ -1,0 +1,11 @@
+/data/mongo
+/data/mysql
+/data/redis
+/data/php_nginx
+/data/elasticsearch/data
+/php_nginx/covision
+/localup
+/.idea
+/.git
+*.tgz
+.project

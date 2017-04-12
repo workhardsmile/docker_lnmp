@@ -1,0 +1,8 @@
+FROM hub.c.163.com/lightingfire/mongodb:3.2-alpine
+
+MAINTAINER  Frank Wu "gang.wu@istuary.com"
+
+RUN mkdir -p /data/db && chmod 0777 /data/db
+VOLUME ["/data/db"]
+EXPOSE 27017
+CMD ["mongod"]

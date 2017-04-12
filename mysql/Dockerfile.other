@@ -1,0 +1,9 @@
+FROM hub.c.163.com/library/mysql:5.7
+
+MAINTAINER  Frank Wu "gang.wu@istuary.com"
+
+RUN mkdir -p /data/mysql && chmod 777 /data/mysql
+VOLUME ["/data/mysql"]
+COPY my.cnf /etc/mysql/my.cnf
+EXPOSE 3306
+CMD ["mysqld"]

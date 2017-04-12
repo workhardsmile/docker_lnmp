@@ -1,0 +1,39 @@
+version: "2.1"
+
+services:
+  mysql:
+      extends:
+          file: ./docker-db-registry.yml
+          service: mysql
+      ports:
+          - "3307:3306"
+      volumes:
+          - ../data/mysql:/data/mysql
+  mongo:
+      extends:
+          file: ./docker-db-registry.yml
+          service: mongo
+      ports:
+          - "27018:27017"
+      volumes:
+          - ../data/mongo:/data/db
+  redis:
+      extends:
+          file: ./docker-db-registry.yml
+          service: redis
+      ports:
+          - "6380:6379"
+      volumes:
+          - ../data/redis:/data
+  php_nginx:
+      container_name: php_nginx
+      image: 192.168.29.158:5000/php-nginx-alpine:dev-latest
+      ports:
+        - "80:80"
+      links:
+        - "mysql"
+        - "redis"
+        #- "mongo"
+      volumes:
+        - ../data/php_nginx/log:/data/web/log
+        - ../data/php_nginx/www:/data/web/www

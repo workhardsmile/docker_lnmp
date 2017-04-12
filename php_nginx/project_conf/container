@@ -1,0 +1,10 @@
+#!/bin/sh
+root_dir=/home/iron/covision-container
+registration_name="192.168.29.158:5000"
+/usr/local/bin/docker-compose -f "$root_dir/docker-compose-registry.yml"  stop
+#docker stop $(docker ps -a|grep "$registration_name"|awk '{print $1}')|xargs docker rm
+#docker rmi $(docker images|grep "$registration_name"|awk '{print $3}') -f
+mkdir -p $root_dir/data/php_nginx/www/covision
+chown -R root:root $root_dir/data
+/usr/local/bin/docker-compose -f "$root_dir/docker-compose-registry.yml" up php_nginx
+exit 3

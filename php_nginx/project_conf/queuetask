@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cd /data/web/www/covision
+php artisan socket:serve &
+php artisan queue:listen &
+php artisan queue:work --queue=test &
+php artisan queue:work --queue=emails
+exit 3

@@ -2,25 +2,25 @@ version: "2.1"
 
 services:
   mysql:
-      extends:
-          file: ./external_files/docker-db-registry.yml
-          service: mysql
+      container_name: mysql
+      image: 192.168.29.158:5000/mysql-alpine:latest
+      restart: always
       ports:
           - "3307:3306"
       volumes:
           - ../data/mysql:/data/mysql
   mongo:
-      extends:
-          file: ./external_files/docker-db-registry.yml
-          service: mongo
+      container_name: mongo
+      image: 192.168.29.158:5000/mongo-alpine:latest
+      restart: always
       ports:
           - "27018:27017"
       volumes:
           - ../data/mongo:/data/db
   redis:
-      extends:
-          file: ./external_files/docker-db-registry.yml
-          service: redis
+      container_name: redis
+      image: 192.168.29.158:5000/redis-alpine:latest
+      restart: always
       ports:
           - "6380:6379"
       volumes:
@@ -38,10 +38,16 @@ services:
           TZ: Asia/Chongqing
   php_nginx:
       container_name: php_nginx
-      image: hub.c.163.com/workhardsmile/lnmp-alpine:php-nginx-1.0
+      image: 192.168.29.158:5000/php-nginx-alpine:no-code-1.5
       restart: always
+      extra_hosts:
+        - "exam.ccsec.cn:172.17.98.12"
+        - "ucenter.ccsec.cn:172.17.98.12"
+        - "tas-km.ccsec.cn:172.17.98.13"
+        - "dev.covision.com:127.0.0.1"
       ports:
         - "80:80"
+        - "443:443"
       links:
         - "mysql"
         - "redis"
@@ -50,3 +56,4 @@ services:
       volumes:
         - ../data/php_nginx/log:/data/web/log
         - ../data/php_nginx/www:/data/web/www
+        - ../data/php_nginx/conf:/data/web/conf

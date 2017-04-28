@@ -94,3 +94,8 @@ network.host: 0.0.0.0
 # Require explicit names when deleting indices:
 #
 # action.destructive_requires_name: true
+script.groovy.sandbox.enabled: true
+script.inline: on
+script.indexed: on
+index.number_of_shards: 2
+number_of_replicas: 0

@@ -2,7 +2,7 @@ version: "2.1"
 
 services:
   elasticsearch:
-    image: hub.c.163.com/workhardsmile/lnmp-alpine:es-1.0
+    image: 192.168.29.158:5000/elasticsearch:v1.1
     container_name: elasticsearch
     restart: always
 

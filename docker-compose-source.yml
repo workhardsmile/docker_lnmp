@@ -2,29 +2,34 @@ version: "2.1"
 
 services:
   mysql:
-      extends:
-          file: ./external_files/docker-db.yml
-          service: mysql
+      container_name: mysql
+      build:
+        context: ./mysql
+        dockerfile: Dockerfile
+      environment:
+        MYSQL_ROOT_PASSWORD: 111111
       ports:
-          - "3307:3306"
+        - "3307:3306"
       volumes:
-          - ../data/mysql:/data/mysql
+        - ../data/mysql:/data/mysql
   mongo:
-      extends:
-          file: ./external_files/docker-db.yml
-          service: mongo
+      container_name: mongo
+      build:
+        context: ./mongo
+        dockerfile: Dockerfile
       ports:
-          - "27018:27017"
+        - "27018:27017"
       volumes:
-          - ../data/mongo:/data/db
+        - ../data/mongo:/data/db
   redis:
-      extends:
-          file: ./external_files/docker-db.yml
-          service: redis
+      container_name: redis
+      build:
+        context: ./redis
+        dockerfile: Dockerfile
       ports:
-          - "6380:6379"
+        - "6380:6379"
       volumes:
-          - ../data/redis:/data
+        - ../data/redis:/data
   elasticsearch:
       extends:
           file: ./elasticsearch/docker-compose.yml
@@ -35,18 +40,21 @@ services:
           - ../data/elasticsearch/data:/usr/share/elasticsearch/data
           - ../data/elasticsearch/config:/usr/share/elasticsearch/config
       environment:
-          TZ: Asia/Chongqin
+          TZ: Asia/Chongqing
   php_nginx:
       container_name: php_nginx
       build:
-        context: ./php_nginx
+        context: ./php_nginx/project_conf
         dockerfile: Dockerfile
       ports:
         - "80:80"
+        - "443:443"
       links:
         - "mysql"
         - "redis"
+        - "elasticsearch"
         #- "mongo"
       volumes:
         - ../data/php_nginx/log:/data/web/log
         - ../data/php_nginx/www:/data/web/www
+        - ../data/php_nginx/conf:/data/web/conf
